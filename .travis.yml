@@ -1,15 +1,32 @@
+sudo: required
+dist: trusty
 language: cpp
 compiler:
-  - gcc
   - clang
-before_script:
- - sudo apt-get install libgmp3-dev libboost-thread-dev libboost-regex-dev libboost-system-dev libboost-filesystem-dev liblua5.1-dev libxml2-dev libsqlite3-dev
+  - gcc
+env:
+  - LUAJIT=OFF
+  - LUAJIT=ON
+cache: apt
+addons:
+  apt:
+    packages:
+      - libboost-dev
+      - libboost-system-dev
+      - libboost-iostreams-dev
+	  - libboost-thread-dev
+	  - libboost-regex-dev
+	  - libboost-filesystem-dev
+      - libcrypto++-dev
+      - liblua5.1-dev
+      - libluajit-5.1-dev
+      - libmysqlclient-dev
+      - libpugixml-dev
+	  - libgmp3-dev
+	  - libxml2-dev
+	  - libsqlite3-dev
 script: |
   cd src
   ./autogen.sh
-  ./configure --enable-sqlite
-  make
-  
-notifications:
-  irc:
-#    - "irc.quakenet.org#otserv"
+  ./configure --enable-sqlite --enable-mysql
+  make -j2
